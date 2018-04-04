@@ -1,0 +1,37 @@
+{% extends "allergies/layout.html" %}
+
+{% block title %}
+    Search
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <h1>Search</h1>
+        <p>
+            You have two options for looking up allergen documentation: you may either select a restaurant from the drop-down
+            list, or you may use the search box below.
+        </p>
+        <br>
+        {% if rest_list %}
+        <form id="dd">
+        {% csrf_token %}
+            <select class="form-control" name="restaurant" id="rstrnt" onchange="openLink(this.value);">
+                <option value="" selected>Select a restaurant:</option>
+                {% for rest in rest_list %}
+                    <option value="{{ rest.rest_link }}">{{ rest.restaurant_name }}</option>
+                {% endfor %}
+            </select>
+        </form>
+        {% else %}
+            <p>No information currently available</p>
+        {% endif %}
+        <br>
+        <form id="form">
+            <div class="form-group">
+                <label for="q">Enter restaurant yourself:&nbsp;</label>
+                <br>
+                <input type="text" class="form-control" id="q" autofocus autocomplete="off" placeholder="Type restaurant name">
+            </div>
+        </form>
+    </div>
+{% endblock %}
