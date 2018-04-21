@@ -95,9 +95,9 @@ def contact(request):
                 send_mail(subject, message, from_email, ['allergy.list.website@gmail.com'])
             except BadHeaderError:
                 return HttpResponse("Invalid email header information")
-            return redirect('success')
-    return render(request, "email.html", {'form': form})
+            return redirect('allergies:success')
+    return render(request, "allergies/email.html", {'form': form})
 
-def success(request):
+def successView(request):
     """Displays a success message that the user's message was sent"""
-    return HttpResponse("Your message was successfully sent!")
+    return render(request, "allergies/success.html")
