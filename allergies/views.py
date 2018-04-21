@@ -1,7 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.utils import timezone
+from django.core.serializers.json import DjangoJSONEncoder
+import json
+from itertools import chain
+from django.contrib import messages
 
 from .models import Link, Request
 from .forms import RequestForm
@@ -27,13 +31,56 @@ def ask(request):
             req = form.save(commit=False)
             req.request_date = timezone.now()
             req.save()
+            messages.success(request, "Your request has been successfully processed.")
+        else:
+            messages.error(request, "There was a problem processing your request.")
         return HttpResponseRedirect(reverse('allergies:request'))
 
     elif request.method == 'GET':
         form = RequestForm()
-        return render(request, 'allergies/request.html', {'form': form})
+        context = {'form': form}
+        return render(request, 'allergies/request.html', context)
 
+def lookup(request):
+    """Search for restaurants similar to query"""
 
+    if not request.GET['q']:
+        raise RuntimeError("missing query")
+
+    q = request.GET['q']
+
+    # search database for objects similar to user query
+    entries = Link.objects.filter(restaurant_name__startswith=q).values('restaurant_name', 'rest_link')
+    
+    # convert to json to pass to jquery
+    entries_json = json.dumps(list(entries), cls=DjangoJSONEncoder)
+	
+    return HttpResponse(entries_json, content_type='application/json')
+
+def check(request, st):
+    """Check to ensure requested restaurant is not already available in database"""
+    
+    # ensure parameter was passed correctly
+    try:
+        name = st
+    except:
+        raise RuntimeError("Missing query")
+    
+    # check both tables for a restaurant whose name matches that requested, combine results
+    link_list = Link.objects.filter(restaurant_name=name).values('restaurant_name')
+    request_list = Request.objects.filter(request_name=name).values('request_name')
+
+    #convert to json and pass back
+    link_list_json = json.dumps(list(link_list), cls=DjangoJSONEncoder)
+    request_list_json = json.dumps(list(request_list), cls=DjangoJSONEncoder)
+
+    if len(link_list_json) > 2:
+        return HttpResponse(link_list_json, content_type='application/json')
+    else:
+        return HttpResponse(request_list_json, content_type='application/json')
+
+    
 def contact(request):
     """Loads the contact page for the allergies app"""
     return HttpResponse("This is a placeholder for the contact page")
+
