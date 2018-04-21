@@ -1,0 +1,26 @@
+{% extends "allergies/layout.html" %}
+
+{% block title %}
+    Contact
+{% endblock %}
+
+{% block main %}
+<div class="conatiner-fluid">
+<h1>Contact Me</h1>
+<p>I hope you've found this website useful. If you have any questions or concerns, would like to see a feature added to the
+    website, or would like me to remove one of the allergy lists I have posted, use this form to contact me. Please provide
+    a valid email address so that I can respond if I have follow-up questions.
+</p>
+<div style="width:100%">
+    <form id="contact" method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+        {{field}}
+    </div>
+    {% endfor %}
+    <input class="btn btn-primary" type="submit" value="Send message">
+    </form>
+</div>
+</div>
+{% endblock %}
