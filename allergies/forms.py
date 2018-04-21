@@ -16,3 +16,17 @@ class RequestForm(forms.ModelForm):
     class Meta:
         model = Request
         fields = ['request_name', 'request_link']
+
+class ContactForm(forms.Form):
+    from_email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter your email address', 'autofocus': ''})
+    )
+    subject = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject of your message'})
+    )
+    message = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Type your message here'})
+    )
