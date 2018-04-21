@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.utils import timezone
@@ -6,9 +6,10 @@ from django.core.serializers.json import DjangoJSONEncoder
 import json
 from itertools import chain
 from django.contrib import messages
+from django.core.mail import send_mail, BadHeaderError
 
 from .models import Link, Request
-from .forms import RequestForm
+from .forms import RequestForm, ContactForm
 
 # Create your views here.
 def index(request):
@@ -82,5 +83,21 @@ def check(request, st):
     
 def contact(request):
     """Loads the contact page for the allergies app"""
-    return HttpResponse("This is a placeholder for the contact page")
+    if request.method == 'GET':
+        form = ContactForm()
+    else:
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            from_email = form.cleaned_data['from_email']
+            message = form.cleaned_data['message']
+            try:
+                send_mail(subject, message, from_email, ['allergy.list.website@gmail.com'])
+            except BadHeaderError:
+                return HttpResponse("Invalid email header information")
+            return redirect('success')
+    return render(request, "email.html", {'form': form})
 
+def success(request):
+    """Displays a success message that the user's message was sent"""
+    return HttpResponse("Your message was successfully sent!")
