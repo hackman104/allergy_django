@@ -8,6 +8,12 @@ function openLink(link)
     return false;
 }
 
+$(document).ready(function() {
+    setTimeout(function() {
+        $(".notification").fadeOut(1500);
+    }, 5000);
+});
+
 var popupBlockerChecker = {
 	check: function(popup_window){
 		var _scope = this;
