@@ -7,6 +7,8 @@ import json
 from itertools import chain
 from django.contrib import messages
 from django.core.mail import send_mail, BadHeaderError
+import sendgrid, os
+from sendgrid.helpers.mail import *
 
 from .models import Link, Request
 from .forms import RequestForm, ContactForm
@@ -80,23 +82,44 @@ def check(request, st):
     else:
         return HttpResponse(request_list_json, content_type='application/json')
 
-    
 def contact(request):
-    """Loads the contact page for the allergies app"""
     if request.method == 'GET':
         form = ContactForm()
     else:
         form = ContactForm(request.POST)
         if form.is_valid():
+            sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('EMAIL_API_PASS'))
+            from_email = Email(form.cleaned_data['from_email'])
+            to_email = Email("allergy.list.website@gmail.com")
             subject = form.cleaned_data['subject']
-            from_email = form.cleaned_data['from_email']
-            message = form.cleaned_data['message']
-            try:
-                send_mail(subject, message, from_email, ['allergy.list.website@gmail.com'])
-            except BadHeaderError:
-                return HttpResponse("Invalid email header information")
-            return redirect('allergies:success')
+            content = Content("text/plain", form.cleaned_data['message'])
+            mail = Mail(from_email, subject, to_email, content)
+            response = sg.client.mail.send.post(request_body=mail.get())
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+            messages.success(request, "Your email has been sent.")
+            return HttpResponseRedirect(reverse('allergies:contact'))
     return render(request, "allergies/email.html", {'form': form})
+
+#def contact(request):
+#    """Loads the contact page for the allergies app"""
+#    if request.method == 'GET':
+#        form = ContactForm()
+#    else:
+#        form = ContactForm(request.POST)
+#        if form.is_valid():
+#            subject = form.cleaned_data['subject']
+#            from_email = form.cleaned_data['from_email']
+#            message = form.cleaned_data['message']
+#            messages.success(request, "Your email has been sent.")
+#            try:
+#                send_mail(subject, message, from_email, ['allergy.list.website@gmail.com'])
+#            except BadHeaderError:
+#                return HttpResponse("Invalid email header information")
+#            return HttpResponseRedirect(reverse('allergies:contact'))
+#            # return redirect('allergies:success')
+#    return render(request, "allergies/email.html", {'form': form})
 
 def successView(request):
     """Displays a success message that the user's message was sent"""

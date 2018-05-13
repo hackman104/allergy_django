@@ -11,6 +11,15 @@
     website, or would like me to remove one of the allergy lists I have posted, use this form to contact me. Please provide
     a valid email address so that I can respond if I have follow-up questions.
 </p>
+
+{% if messages %}
+{% for message in messages %}
+<div class="notification">
+<p style="color:green"><strong>{{message}}</strong></p>
+</div>
+{% endfor %}
+{% endif %}
+
 <div style="width:100%">
     <form id="contact" method="POST">
     {% csrf_token %}
