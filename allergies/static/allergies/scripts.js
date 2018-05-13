@@ -14,6 +14,14 @@ $(document).ready(function() {
     }, 5000);
 });
 
+function recaptcha_callback_request() {
+    $("#request_submit").removeAttr("disabled");
+}
+
+function recaptcha_callback_email() {
+    $("#email_submit").removeAttr("disabled");
+}
+
 var popupBlockerChecker = {
 	check: function(popup_window){
 		var _scope = this;
