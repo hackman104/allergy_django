@@ -5,10 +5,10 @@
 {% endblock %}
 
 {% block main %}
-<div class="conatiner-fluid">
+<div class="container-fluid">
 <h1>Contact Me</h1>
-<p>I hope you've found this website useful. If you have any questions or concerns, would like to see a feature added to the
-    website, or would like me to remove one of the allergy lists I have posted, use this form to contact me. Please provide
+<p>If you have any questions or concerns, would like to see a feature added to the website, 
+    or would like me to remove one of the allergy lists I have posted, use this form to contact me. Please provide
     a valid email address so that I can respond if I have follow-up questions.
 </p>
 
@@ -28,6 +28,8 @@
         {{field}}
     </div>
     {% endfor %}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <div class="g-recaptcha" data-sitekey="6Len51gUAAAAAO84UpoOdQ6yAnUS7QOW4bL_Kip1"></div>
     <input class="btn btn-primary" type="submit" value="Send message">
     </form>
 </div>

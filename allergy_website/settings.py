@@ -125,9 +125,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+GOOGLE_RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_KEY')

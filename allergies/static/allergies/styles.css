@@ -1,17 +1,11 @@
-html, body, .container-fluid
+/*html, body, .container-fluid
 {
-    /* Height of these elements */
     height: 100%;
 
-    /* No margin around these elements */
     margin: 0;
 
-    /* Disable scrollbars */
-    /* overflow: hidden; */
-
-    /* No padding within these elements */
     padding: 0;
-}
+}*/
 
 .success
 {
