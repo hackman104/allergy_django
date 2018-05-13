@@ -13,11 +13,11 @@
 </p>
 
 {% if messages %}
-{% for message in messages %}
 <div class="notification">
-<p style="color:green"><strong>{{message}}</strong></p>
+    {% for message in messages %}
+    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+    {% endfor %}
 </div>
-{% endfor %}
 {% endif %}
 
 <div style="width:100%">

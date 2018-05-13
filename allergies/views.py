@@ -58,8 +58,6 @@ def ask(request):
             req.request_date = timezone.now()
             req.save()
             messages.success(request, "Your request has been successfully processed.")
-        else:
-            messages.error(request, "There was a problem processing your request.")
         return HttpResponseRedirect(reverse('allergies:request'))
 
     elif request.method == 'GET':
