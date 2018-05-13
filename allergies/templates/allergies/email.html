@@ -1,17 +1,15 @@
 {% extends "allergies/layout.html" %}
 
 {% block title %}
-    Request
+    Contact
 {% endblock %}
 
 {% block main %}
 <div class="container-fluid">
-<h1>Submit a Request</h1>
-<p>
-    Here you may request that I add another restaurant's allergy information to this website. I ask that you please look for it
-    first on the "search" page to ensure that I haven't already uploaded it. In addition, if you already know the link to the website,
-    I ask that you send that in the provided box as well (though this is not required). Thank you for helping to build this
-    project!
+<h1>Contact Me</h1>
+<p>If you have any questions or concerns, would like to see a feature added to the website, 
+    or would like me to remove one of the allergy lists I have posted, use this form to contact me. Please provide
+    a valid email address so that I can respond if I have follow-up questions.
 </p>
 
 {% if messages %}
@@ -23,7 +21,7 @@
 {% endif %}
 
 <div style="width:100%">
-    <form id="request" method="POST">
+    <form id="contact" method="POST">
     {% csrf_token %}
     {% for field in form %}
     <div class="form-group">
@@ -32,7 +30,8 @@
     {% endfor %}
     <script src='https://www.google.com/recaptcha/api.js'></script>
     <div class="g-recaptcha" data-sitekey="6Len51gUAAAAAO84UpoOdQ6yAnUS7QOW4bL_Kip1"></div>
-    <input class="btn btn-primary" type="submit" value="Submit Request">
+    <input class="btn btn-primary" type="submit" value="Send message">
     </form>
+</div>
 </div>
 {% endblock %}

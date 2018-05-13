@@ -14,7 +14,7 @@ class Link(models.Model):
 
 class Request(models.Model):
     request_name = models.CharField(max_length=200)
-    request_link = models.CharField(max_length=200, blank=True, null=True)
+    request_link = models.CharField(max_length=200, blank=True, default='None provided')
     request_date = models.DateTimeField('date requested', blank=True, default=timezone.now)
 
     def __str__(self):

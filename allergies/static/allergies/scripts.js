@@ -3,11 +3,16 @@ function openLink(link)
     if (link == "")
         return false;
 
-    console.log(link)
     var popup = window.open(link, '_blank');
 	popupBlockerChecker.check(popup);
     return false;
 }
+
+$(document).ready(function() {
+    setTimeout(function() {
+        $(".notification").fadeOut(1500);
+    }, 5000);
+});
 
 var popupBlockerChecker = {
 	check: function(popup_window){
@@ -41,7 +46,7 @@ function search(query, syncResults, asyncResults)
         q: query
     };
 
-    $.getJSON("/lookup", parameters, function(data, textStatus, jqXHR) {
+    $.getJSON("../lookup", parameters, function(data, textStatus, jqXHR) {
 
         // Call typeahead's callback with search results (i.e., places)
         asyncResults(data);
@@ -63,7 +68,7 @@ $(document).ready(function() {
         templates: {
             suggestion: Handlebars.compile(
                 '<div>' +
-                '{{name}}' +
+                '{{restaurant_name}}' +
                 '</div>'
             )
         }
@@ -72,38 +77,42 @@ $(document).ready(function() {
     $("#q").on("typeahead:selected", function(eventObject, suggestion, name) {
 
         // Open document user selects from typeahead
-        var popup2 = window.open(suggestion.link, '_blank');
-		popupBlockerChecker.check(popup);
+        var popup2 = window.open(suggestion.rest_link, '_blank');
+		popupBlockerChecker.check(popup2);
     });
 
 
     $("#request").submit(function() {
-        if (!$("#request input[name=rest]").val())
+        if (!$("#request input[name=request_name]").val())
         {
             alert("Please enter a restaurant name to continue");
             return false;
         }
 
-        let store = $("#request input[name=rest]").val();
+        let store = $("#request input[name=request_name]").val();
 
+        /*
         let parameters = {
             st: store
         };
+        */
 
         let results;
 
         $.ajax({
-            url: "/check",
-            data: parameters,
+            url: "../check/" + store,
+            //data: parameters,
             dataType: "json",
             async: false,
             success: function(data) {
                 results = data;
+                console.log(data);
             }
         });
 
         if (results.length > 0)
         {
+            console.log(results);
             alert("That restaurant's information is already available or has already been requested!");
             return false;
         }

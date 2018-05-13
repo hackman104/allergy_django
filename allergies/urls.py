@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
@@ -8,4 +8,7 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('request/', views.ask, name='request'),
     path('contact/', views.contact, name='contact'),
+#    path('success/', views.successView, name='success'),
+    path('lookup/', views.lookup, name='lookup'),
+    path('check/<str:st>', views.check, name='check'),
 ]
