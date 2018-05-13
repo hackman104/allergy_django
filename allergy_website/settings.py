@@ -81,7 +81,7 @@ DATABASES = {
         'NAME': 'allergies',
         'USER': 'allergy_website',
         'PASSWORD': os.environ.get('DB_PASS'),
-        'HOST': 'os.environ.get('DATABASE_URL')',
+        'HOST': os.environ.get('DATABASE_URL'),
         'PORT': '5432',
     }
 }
