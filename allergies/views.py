@@ -91,8 +91,8 @@ def check(request, st):
         raise RuntimeError("Missing query")
     
     # check both tables for a restaurant whose name matches that requested, combine results
-    link_list = Link.objects.filter(restaurant_name=name).values('restaurant_name')
-    request_list = Request.objects.filter(request_name=name).values('request_name')
+    link_list = Link.objects.filter(restaurant_name__icontains=name).values('restaurant_name')
+    request_list = Request.objects.filter(request_name__icontains=name).values('request_name')
 
     #convert to json and pass back
     link_list_json = json.dumps(list(link_list), cls=DjangoJSONEncoder)
