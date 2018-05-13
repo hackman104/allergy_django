@@ -35,9 +35,6 @@ nav .navbar-brand
 
 main
 {
-    /* scroll horizontally as needed */
-    overflow: auto;
-
     height: 100%;
 
     /* left-align contents */
