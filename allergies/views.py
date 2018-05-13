@@ -74,7 +74,7 @@ def lookup(request):
     q = request.GET['q']
 
     # search database for objects similar to user query
-    entries = Link.objects.filter(restaurant_name__startswith=q).values('restaurant_name', 'rest_link')
+    entries = Link.objects.filter(restaurant_name__contains=q).values('restaurant_name', 'rest_link')
     
     # convert to json to pass to jquery
     entries_json = json.dumps(list(entries), cls=DjangoJSONEncoder)
