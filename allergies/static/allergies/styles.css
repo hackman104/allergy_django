@@ -7,12 +7,12 @@
     padding: 0;
 }*/
 
-.success
+p.success
 {
     color: green;
 }
 
-.warning
+p.error
 {
     color: red;
 }

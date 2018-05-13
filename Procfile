@@ -1,0 +1,1 @@
+web: gunicorn allergy_website.wsgi
