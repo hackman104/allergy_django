@@ -1,5 +1,5 @@
-# allergy_jango
+# allergy_django
 
 Experimenting with rebuilding a previous project with django.
 
-I eventually plan to switch from sqlite3 to MySQL.
+I also switched from SQLite3 to PostgreSQL.
