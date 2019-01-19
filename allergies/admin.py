@@ -13,6 +13,7 @@ class LinkAdmin(admin.ModelAdmin):
 
 admin.site.register(Link, LinkAdmin)
 
+
 class RequestAdmin(admin.ModelAdmin):
     list_display = ("request_name", "request_date")
     fieldsets = [

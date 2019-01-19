@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import django_heroku
+if not os.environ.get('IS_DEV', False):
+    import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,9 +25,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
-ALLOWED_HOSTS = []
+if os.environ.get('IS_DEV', False):
+    DEBUG = True
+    ALLOWED_HOSTS = []
+else:
+    DEBUG = False
+    ALLOWED_HOSTS = ['allergy-site.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -75,16 +79,28 @@ WSGI_APPLICATION = 'allergy_website.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'allergies',
-        'USER': 'allergy_website',
-        'PASSWORD': os.environ.get('DB_PASS'),
-        'HOST': os.environ.get('DATABASE_URL'),
-        'PORT': '5432',
+if os.environ.get('IS_DEV', False):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'allergies',
+            'USER': 'allergy_website',
+            'PASSWORD': os.environ.get('DB_PASS'),
+            'HOST': '',
+            'PORT': '',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'allergies',
+            'USER': 'allergy_website',
+            'PASSWORD': os.environ.get('DB_PASS', 'postgres'),
+            'HOST': os.environ.get('DATABASE_URL'),
+            'PORT': '5432',
+        }
+    }
 
 
 # Password validation
@@ -133,5 +149,6 @@ EMAIL_USE_TLS = True
 
 GOOGLE_RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_KEY')
 
-# Activate Django-Heroku
-django_heroku.settings(locals())
+if not os.environ.get('IS_DEV', False):
+    # Activate Django-Heroku
+    django_heroku.settings(locals())

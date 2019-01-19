@@ -12,6 +12,7 @@ class Link(models.Model):
     def __str__(self):
         return self.restaurant_name
 
+
 class Request(models.Model):
     request_name = models.CharField(max_length=200)
     request_link = models.CharField(max_length=200, blank=True, default='None provided')

@@ -5,33 +5,67 @@
 {% endblock %}
 
 {% block main %}
-    <div class="container-fluid">
         <h1>Search</h1>
-        <p>
-            You have two options for looking up allergen documentation: you may either select a restaurant from the drop-down
-            list, or you may use the search box below.
+        <p>You may either select a restaurant from the drop-down list or use the search box below. I do my best to keep
+            this information updated (generally checking quarterly), but if something is broken or outdated please report
+            it to me. Each restaurant provides its allergen information differently (some via pdf, some directly in their
+            menu, etc.), so I try to provide the link that will be most immediately useful.
         </p>
-        <br>
         {% if rest_list %}
         <form id="dd">
         {% csrf_token %}
-            <select class="form-control" name="restaurant" id="rstrnt" onchange="openLink(this.value);">
-                <option value="" selected>Select a restaurant:</option>
-                {% for rest in rest_list %}
-                    <option value="{{ rest.rest_link }}">{{ rest.restaurant_name }}</option>
-                {% endfor %}
-            </select>
+            <div class="form-group">
+                <select class="form-control" name="restaurant" id="rstrnt" onchange="openLink(this.value);">
+                    <option value="" selected>Select a restaurant:</option>
+                    {% for rest in rest_list %}
+                        <option value="{{ rest.rest_link }}">{{ rest.restaurant_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
         </form>
         {% else %}
             <p>No information currently available</p>
         {% endif %}
-        <br>
-        <form id="form">
+        <form id="form" class="mt-4">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="q">Enter restaurant yourself:&nbsp;</label>
                 <br>
                 <input type="text" class="form-control" id="q" autofocus autocomplete="off" placeholder="Type restaurant name">
             </div>
         </form>
-    </div>
+        <div id="pdf-div" style="display: none;">
+            <object id="pdf-viewer" data="" type="application/pdf" width="100%" height="500px">
+                alt : <a id="alt_pdf_link" href=""></a>
+            </object>
+        </div>
+{% endblock %}
+{% block footer %}
+<script>
+    $(function() {
+        $("#q").autocomplete({
+            source: "{% url 'allergies:get_names' %}",
+            minLength: 3,
+            autoFocus: true,
+            focus: function(event, ui) {
+                return false;
+            },
+            select: function(event, ui) {
+                var link = ui.item.value;
+                $("#q").val(ui.item.label);
+                if (link.includes(".pdf")) {
+                    $("#pdf-viewer").attr("data", link);
+                    $("#alt_pdf_link").attr("href", link);
+                    $("#pdf-div").show();
+                }
+                else {
+                    $("#pdf-div").hide();
+                    var win = window.open(link, '_blank');
+                    win.focus();
+                }
+                return false;
+            },
+        });
+    });
+</script>
 {% endblock %}

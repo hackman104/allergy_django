@@ -35,16 +35,19 @@ def check_recaptcha(view_func):
         return view_func(request, *args, **kwargs)
     return _wrapped_view
 
+
 # Create your views here.
 def index(request):
     """Loads the home page for allergies app"""
     return render(request, 'allergies/index.html')
+
 
 def search(request):
     """Loads the search page for the allergies app"""
     rest_list = Link.objects.order_by('restaurant_name')
     context = {'rest_list': rest_list}
     return render(request, 'allergies/search.html', context)
+
 
 @check_recaptcha
 def ask(request):
@@ -65,6 +68,7 @@ def ask(request):
         context = {'form': form}
         return render(request, 'allergies/request.html', context)
 
+
 def lookup(request):
     """Search for restaurants similar to query"""
 
@@ -81,9 +85,22 @@ def lookup(request):
 	
     return HttpResponse(entries_json, content_type='application/json')
 
+
+def get_restaurant(request):
+    """Looks up restaurant names similar to the user's query"""
+    if request.is_ajax():
+        q = request.GET.get('term', '')
+        queryset = Link.objects.filter(restaurant_name__icontains=q).order_by('restaurant_name')
+        results = [{'label': item.restaurant_name, 'value': item.rest_link} for item in queryset]
+        data = json.dumps(list(results), cls=DjangoJSONEncoder)
+    else:
+        data = 'fail'
+
+    return HttpResponse(data, content_type='application/json')
+
+
 def check(request, st):
     """Check to ensure requested restaurant is not already available in database"""
-    
     # ensure parameter was passed correctly
     try:
         name = st
@@ -103,25 +120,6 @@ def check(request, st):
     else:
         return HttpResponse(request_list_json, content_type='application/json')
 
-#def contact(request):
-#    if request.method == 'GET':
-#        form = ContactForm()
-#    else:
-#        form = ContactForm(request.POST)
-#        if form.is_valid():
-#            sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('EMAIL_API_PASS'))
-#            from_email = Email(form.cleaned_data['from_email'])
-#            to_email = Email("allergy.list.website@gmail.com")
-#            subject = form.cleaned_data['subject']
-#            content = Content("text/plain", form.cleaned_data['message'])
-#            mail = Mail(from_email, subject, to_email, content)
-#            response = sg.client.mail.send.post(request_body=mail.get())
-#            print(response.status_code)
-#            print(response.body)
-#            print(response.headers)
-#            messages.success(request, "Your email has been sent.")
-#            return HttpResponseRedirect(reverse('allergies:contact'))
-#    return render(request, "allergies/email.html", {'form': form})
 
 @check_recaptcha
 def contact(request):
@@ -143,9 +141,3 @@ def contact(request):
         else:
             form = ContactForm()
     return render(request, "allergies/email.html", {'form': form})
-
-
-
-#def successView(request):
-#    """Displays a success message that the user's message was sent"""
-#    return render(request, "allergies/success.html")

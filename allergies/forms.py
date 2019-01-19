@@ -1,5 +1,4 @@
 from django import forms
-
 from allergies.models import Request
 
 class RequestForm(forms.ModelForm):
@@ -16,6 +15,7 @@ class RequestForm(forms.ModelForm):
     class Meta:
         model = Request
         fields = ['request_name', 'request_link']
+
 
 class ContactForm(forms.Form):
     from_email = forms.EmailField(
