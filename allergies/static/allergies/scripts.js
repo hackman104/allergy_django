@@ -31,7 +31,7 @@ $(document).ready(function() {
         }
         else if (link.includes(".pdf")) {
             $("#pdf-viewer").attr("data", link + "?#view=FitH");
-            $("#alt_pdf_link").attr("href", link + "?#view=FitH");
+            $("#alt_pdf_link").attr("href", link);
             $("#pdf-div").show();
         }
         else {
