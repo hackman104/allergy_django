@@ -80,23 +80,6 @@ def ask(request):
         return render(request, 'allergies/request.html', context)
 
 
-def lookup(request):
-    """Search for restaurants similar to query"""
-
-    if not request.GET['q']:
-        raise RuntimeError("missing query")
-
-    q = request.GET['q']
-
-    # search database for objects similar to user query
-    entries = Link.objects.filter(restaurant_name__istartswith=q).values('restaurant_name', 'rest_link')
-    
-    # convert to json to pass to jquery
-    entries_json = json.dumps(list(entries), cls=DjangoJSONEncoder)
-	
-    return HttpResponse(entries_json, content_type='application/json')
-
-
 def get_restaurant(request):
     """Looks up restaurant names similar to the user's query"""
     if request.is_ajax():
@@ -108,28 +91,6 @@ def get_restaurant(request):
         data = 'fail'
 
     return HttpResponse(data, content_type='application/json')
-
-
-def check(request, st):
-    """Check to ensure requested restaurant is not already available in database"""
-    # ensure parameter was passed correctly
-    try:
-        name = st
-    except:
-        raise RuntimeError("Missing query")
-    
-    # check both tables for a restaurant whose name matches that requested, combine results
-    link_list = Link.objects.filter(restaurant_name__icontains=name).values('restaurant_name')
-    request_list = Request.objects.filter(request_name__icontains=name).values('request_name')
-
-    #convert to json and pass back
-    link_list_json = json.dumps(list(link_list), cls=DjangoJSONEncoder)
-    request_list_json = json.dumps(list(request_list), cls=DjangoJSONEncoder)
-
-    if len(link_list_json) > 2:
-        return HttpResponse(link_list_json, content_type='application/json')
-    else:
-        return HttpResponse(request_list_json, content_type='application/json')
 
 
 @check_recaptcha

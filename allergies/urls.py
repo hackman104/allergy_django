@@ -5,11 +5,8 @@ from . import views
 app_name = 'allergies'
 urlpatterns = [
     path('', views.search, name='index'),
-    path('search/', views.search, name='search'),
     path('request/', views.ask, name='request'),
     path('contact/', views.contact, name='contact'),
     path('about/', views.about, name='about'),
-    path('lookup/', views.lookup, name='lookup'),
-    path('check/<str:st>', views.check, name='check'),
     path('get_names/', views.get_restaurant, name='get_names'),
 ]
