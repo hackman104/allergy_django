@@ -69,6 +69,9 @@ def ask(request):
             req.request_date = timezone.now()
             req.save()
             messages.success(request, "Your request has been successfully processed.")
+            subject = "New request received: " + request_name
+            body = "New allergen information requested for " + request_name
+            status = send_message(subject, 'autorequest@allergysite.com', body)
         return HttpResponseRedirect(reverse('allergies:request'))
 
     elif request.method == 'GET':
@@ -149,3 +152,19 @@ def contact(request):
         else:
             form = ContactForm()
     return render(request, "allergies/email.html", {'form': form})
+
+
+def send_message(subject, from_email, message):
+    """
+    Sends email to website account.
+
+    subject is a string with the message subject
+    from_email is the from address for the message
+    message is the message body
+    """
+    try:
+        send_mail(subject, message, from_email, ['allergy.list.website@gmail.com'])
+        return True
+    except BadHeaderError:
+        print("Error sending email")
+        return False
