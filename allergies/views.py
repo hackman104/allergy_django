@@ -154,6 +154,11 @@ def contact(request):
     return render(request, "allergies/email.html", {'form': form})
 
 
+def about(request):
+    """Loads the about page for allergies app"""
+    return render(request, 'allergies/index.html')
+
+
 def send_message(subject, from_email, message):
     """
     Sends email to website account.

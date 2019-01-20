@@ -7,10 +7,13 @@
 {% block main %}
         <h1>Search</h1>
         <p>You may either select a restaurant from the drop-down list or use the search box below. I do my best to keep
-            this information updated (generally checking quarterly), but if something is broken or outdated please report
-            it to me. Each restaurant provides its allergen information differently (some via pdf, some directly in their
-            menu, etc.), so I try to provide the link that will be most immediately useful.
+            this information up-to-date, but if a link is broken or outdated please report it to me. Each restaurant 
+            provides its allergen information differently (some via pdf, some directly in their menu, etc.), so I try
+            to provide the link that will be most immediately useful.
         </p>
+        <p style="font-size: 14px; color: red;"><em>Disclaimer: I cannot verify the accuracy of these allergen guides. Please supplement this information with
+            your own research and use your own best judgment.
+        </em></p>
         {% if rest_list %}
         <form id="dd">
         {% csrf_token %}
