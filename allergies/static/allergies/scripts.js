@@ -137,61 +137,21 @@ $(document).ready(function() {
 		popupBlockerChecker.check(popup2);
     });*/
 
-
-    $("#request").submit(function() {
-        if (!$("#request input[name=request_name]").val())
-        {
-            alert("Please enter a restaurant name to continue");
-            return false;
-        }
-
-        let store = $("#request input[name=request_name]").val();
-
-        /*
-        let parameters = {
-            st: store
-        };
-        */
-
-        let results;
-
-        $.ajax({
-            url: "../check/" + store,
-            //data: parameters,
-            dataType: "json",
-            async: false,
-            success: function(data) {
-                results = data;
-                console.log(data);
-            }
-        });
-
-        if (results.length > 0)
-        {
-            console.log(results);
-            alert("That restaurant's information is already available or has already been requested!");
-            return false;
-        }
-
-        else
-        {
-            return true;
-        }
-    });
-
     $("#rstrnt").change(function() {
         var link = $("#rstrnt option:selected").val();
         if (link == "") {
             return false;
-        } else if (link.includes(".pdf")) {
+        }
+        else if (link.includes(".pdf")) {
             $("#pdf-viewer").attr("data", link);
             $("#alt_pdf_link").attr("href", link);
             $("#pdf-div").show();
-        } else {
+        }
+        else {
             $("#pdf-div").hide();
-            var popup = window.open(link, '_blank');
-            popupBlockerChecker.check(popup);
+            var win = window.open(link, "_blank");
+            win.focus();
         }
         return false;
-    })
+    });
 });

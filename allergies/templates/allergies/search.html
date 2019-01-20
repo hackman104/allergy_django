@@ -15,7 +15,7 @@
         <form id="dd">
         {% csrf_token %}
             <div class="form-group">
-                <select class="form-control" name="restaurant" id="rstrnt" onchange="openLink(this.value);">
+                <select class="form-control" name="restaurant" id="rstrnt">
                     <option value="" selected>Select a restaurant:</option>
                     {% for rest in rest_list %}
                         <option value="{{ rest.rest_link }}">{{ rest.restaurant_name }}</option>

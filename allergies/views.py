@@ -57,6 +57,14 @@ def ask(request):
     if request.method == 'POST':
         form = RequestForm(request.POST)
         if form.is_valid() and request.recaptcha_is_valid:
+            request_name = form.cleaned_data.get('request_name')
+            check_name = request_name
+            if Link.objects.filter(restaurant_name__iexact=check_name).exists():
+                messages.error(request, "Info for that restaurant has already been entered.")
+                return HttpResponseRedirect(reverse('allergies:request'))
+            elif Request.objects.filter(request_name__iexact=check_name).exists():
+                messages.error(request, "Info for that restaurant has already been requested.")
+                return HttpResponseRedirect(reverse('allergies:request'))
             req = form.save(commit=False)
             req.request_date = timezone.now()
             req.save()
